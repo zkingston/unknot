@@ -1,5 +1,7 @@
 # Unknot
 
+![Example of Goeritz Unknotting](resources/example.gif)
+
 An implementation of the approach described in "Using Motion Planning for Knot Untangling" by Ladd and Kavraki [1] in C++.
 The main script is implemented in `unknot.cc`.
 Once compiled, it provides a few command line options:
