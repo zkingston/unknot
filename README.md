@@ -16,6 +16,7 @@ Some basic unknots are provided in the `resources/` folder as a JSON list of poi
 - Lebrecht Goeritz's 11 crossing unknot (`goeritz.json`),
 - Morwen Thistlethwaite's 15 crossing unknot (`thistlewaite.json`),
 - Mitsuyuki Ochiai's 16 crossing unknot (`ochiai.json`)
+  
 All of these typically solve in under a second on my M2 Macbook Air.
 For example:
 ```bash
