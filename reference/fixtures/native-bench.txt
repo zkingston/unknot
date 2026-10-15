@@ -1,0 +1,22 @@
+Native C++ baseline, zkingston/unknot @ a585ece, -O3 -march=native, 2-core x86 VM, UNKNOT_VIZ=OFF
+knot            planner seed wall   iters frames n0 nf
+goeritz         heur    1    0.49s  44    1538   26 3
+goeritz         heur    2    0.68s  49    1542   26 3
+goeritz         heur    3    0.26s  15    593    26 3
+goeritz         rand    1    1.64s  69    348    26 3
+goeritz         rand    2    3.51s  258   1138   26 3
+goeritz         rand    3    3.34s  132   711    26 3
+ochiai          heur    1    0.30s  9     690    61 3
+ochiai          heur    2    0.29s  8     723    61 3
+ochiai          heur    3    0.32s  12    754    61 3
+ochiai          rand    1    0.59s  77    589    61 3
+ochiai          rand    2    1.82s  150   911    61 3
+ochiai          rand    3    0.49s  61    521    61 3
+thistlethwaite  heur    1    1.27s  22    1512   96 3
+thistlethwaite  heur    2    1.16s  12    1312   96 3
+thistlethwaite  heur    3    1.18s  9     1234   96 3
+thistlethwaite  rand    1    1.90s  121   1122   96 3
+thistlethwaite  rand    2    3.60s  220   1549   96 3
+thistlethwaite  rand    3    1.66s  101   1023   96 3
+Note: seeds do not reproduce in the native build (std::random_device); -s 7 twice gave 1227 and 1485 frames.
+Strand passages under linear frame interpolation (cross.py): goeritz heur s1: 4, s2: 7; ochiai heur s1: 3; thistlethwaite heur s1: 4.

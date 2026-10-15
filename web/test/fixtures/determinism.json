@@ -1,0 +1,47 @@
+{
+ "culprit": {
+  "scene": "835d9d6970077ef9c94d746cbffdb75afe1bbdebee4a126992808a2ef5c115a2",
+  "log": "a610be7f05a0115e887641710729b3bb0a3424dcf56832920ab520b96186980b",
+  "records": 683
+ },
+ "monster": {
+  "scene": "88f8504c452bda2b8e6df601c97c0229a15093765437c3873e935869ec593e99",
+  "log": "58f850f3d935b7de5ae185e210526a95267fa3c7575f07ba18b996f4a5bb5de3",
+  "records": 500
+ },
+ "h": {
+  "scene": "9b6814e9ce768d5653e4237867d77fd77ebc137c02e0ec30d60a584060ddc59d",
+  "log": "6445c91ce13279095e1a72d7bbd1f87157a5f25bfc4887790e897c678a191700",
+  "records": 566
+ },
+ "j": {
+  "scene": "3eae9e09e7e4292adbd9fea17d0cdf7e72efda34ec991a6e737c9a46ed06e780",
+  "log": "a781f71b9293e8ac1ba5c0adb4b04955b5bb3885be1c3742b20f929f373ffcd3",
+  "records": 642
+ },
+ "goeritz": {
+  "scene": "a2f7698c55893cc40c5f2b6a0cd0e7c2360e3530b62581d92946518615021fa6",
+  "log": "8effdaa5fe8c4c9dcc8b5aeaf3ce9ac4ba771a6759ba546139a164515fa44d22",
+  "records": 3467
+ },
+ "thistlethwaite": {
+  "scene": "aca91ac2d05405042f217d70ce9e3aedbdc3aa57e241e011b8132972acae5bba",
+  "log": "97234cc833197a47cba426ad02fce4c0232a1fa45f6d11db7f8046b7de16bdc7",
+  "records": 765
+ },
+ "ochiai": {
+  "scene": "3e011ea58b5966a151506627294fcf2ead5317ea084f68a3a238f9ba7d65ffe2",
+  "log": "aacc3a84afa571ebadcf14d58cf19c6a2feaec4f9830c4c27ecd5e15d85950d7",
+  "records": 829
+ },
+ "trefoil": {
+  "scene": "bbd72b26e0bc67092cd8ce0c17a0849f32eb648ff3e66f7ceb719f2ffdeec7c5",
+  "log": "ded0e05b126f69178fe35ff6a21d2230f4e86422ba288fe70fa910fde148182e",
+  "records": 1000
+ },
+ "figure-eight": {
+  "scene": "39c7ee48075c7e25b00c3c68636acbfb9f20815c7f47fd5386df21085e8ff429",
+  "log": "b5e32a7bae0cf47cb822c4259b8cee385dacd82c9f5602ee17b0c625f50307ba",
+  "records": 1000
+ }
+}

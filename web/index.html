@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Draw or import a knot diagram and watch a motion planner untangle it.">
+<title>§ unknot</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='5.5' fill='none' stroke='%231C1B19' stroke-width='1.5'/%3E%3C/svg%3E">
+</head>
+<body>
+<header class="top">
+  <h1 class="title">§ unknot</h1>
+  <nav aria-label="main">
+    <button class="btn" id="b-open" aria-haspopup="true" aria-expanded="false"><span>open</span></button>
+    <button class="btn" id="b-draw"><span>draw</span></button>
+    <span class="views">
+      <span class="tog" role="group" aria-label="view"><button id="b-2d" aria-pressed="true"><span>2d</span></button><span class="sep">|</span><button id="b-3d" aria-pressed="false"><span>3d</span></button></span>
+      <span class="tog" role="group" aria-label="style"><button id="b-curve" aria-pressed="true" title="smoothed curve"><span>curve</span></button><span class="sep">|</span><button id="b-sticks" aria-pressed="false" title="ball and stick: the planner's polygon"><span>sticks</span></button></span>
+      <span class="tog" role="group" aria-label="projection"><button id="b-ortho" aria-pressed="true"><span>ortho</span></button><span class="sep">|</span><button id="b-persp" aria-pressed="false"><span>persp</span></button></span>
+    </span>
+    <button class="icon" id="b-theme" aria-label="switch to dark mode" title="dark mode"><svg viewBox="0 0 20 20" aria-hidden="true"><g class="moon"><path d="M14.5 13.2A6.3 6.3 0 0 1 6.8 5.5a6.3 6.3 0 1 0 7.7 7.7z"/></g><g class="sun"><circle cx="10" cy="10" r="3.4"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M4.2 15.8l1.7-1.7M14.1 5.9l1.7-1.7"/></g></svg></button>
+    <button class="btn only-desktop" id="b-about" aria-label="about"><span>?</span></button>
+    <button class="btn only-mobile" id="b-more" aria-expanded="false"><span>more</span></button>
+  </nav>
+</header>
+
+<main class="paper">
+  <figure class="fig">
+    <div class="stage" id="stage">
+      <svg class="view2d" id="view2d" role="img" aria-label="knot diagram"></svg>
+      <canvas id="view3d" aria-label="3d view" tabindex="-1"></canvas>
+      <div class="notice" id="notice"></div>
+      <div class="status" id="status" aria-live="polite"></div>
+      <div class="frost" aria-hidden="true"><span id="frost-text">planning…</span></div>
+    </div>
+  </figure>
+  <aside class="panel" id="panel" aria-label="panel">
+    <button class="btn collapse" id="b-collapse" aria-expanded="true" aria-label="collapse panel"><span>›</span></button>
+    <button class="btn only-mobile sheet-close" id="b-sheet-close" aria-label="close panel"><span>close</span></button>
+    <dl class="kv" id="stats"></dl>
+    <h2>planner</h2>
+    <div class="row"><label for="i-seed">seed</label><input type="number" id="i-seed" min="0" max="4294967295" step="1" value="7"><button class="btn" id="b-reseed"><span>random</span></button></div>
+    <div class="row"><label for="i-budget">budget</label><input type="number" id="i-budget" min="1" max="600" step="1" value="10"> s</div>
+    <div class="row"><button class="btn" id="b-settings" aria-expanded="false"><span>settings</span></button></div>
+    <div id="settings" hidden></div>
+    <h2>annotations</h2>
+    <div class="row">
+      <button class="btn" id="a-numbers" aria-pressed="false"><span>numbers</span></button>
+      <button class="btn" id="a-signs" aria-pressed="false"><span>signs</span></button>
+      <button class="btn" id="a-chevrons" aria-pressed="false"><span>chevrons</span></button>
+      <button class="btn" id="a-reid" aria-pressed="false"><span>reidemeister</span></button>
+    </div>
+    <h2>view</h2>
+    <div class="row">
+      <button class="btn" id="b-best"><span>best view</span></button>
+      <button class="btn" id="b-follow" aria-pressed="false"><span>follow view</span></button>
+    </div>
+    <h2>export</h2>
+    <div class="row">
+      <button class="btn" id="e-svg"><span>svg</span></button>
+      <button class="btn" id="e-png"><span>png</span></button>
+      <button class="btn" id="e-knot"><span>knot</span></button>
+      <button class="btn" id="e-link"><span>copy link</span></button>
+    </div>
+    <div class="row">
+      <button class="btn" id="e-pd"><span>copy pd</span></button>
+      <button class="btn" id="e-gauss"><span>copy gauss</span></button>
+    </div>
+    <button class="btn only-mobile" id="b-about-m"><span>about</span></button>
+    <div class="row editor-note" id="export-note"></div>
+  </aside>
+</main>
+
+<footer class="timeline">
+  <span class="cap r1" aria-hidden="true">sticks</span><svg class="spark r1" id="sp-sticks" preserveAspectRatio="none" aria-hidden="true"></svg>
+  <span class="cap r2" aria-hidden="true">energy</span><svg class="spark r2" id="sp-energy" preserveAspectRatio="none" aria-hidden="true"></svg>
+  <span class="cap r3" aria-hidden="true">crossings</span><svg class="spark r3" id="sp-cross" preserveAspectRatio="none" aria-hidden="true"></svg>
+  <div class="scrub" id="scrub" role="slider" tabindex="0" aria-label="playback position" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"><div class="track"></div><div class="head" id="head" style="left:0"></div></div>
+  <div class="playlane" aria-hidden="true"><div class="playline" id="playline" style="left:0"></div></div>
+  <div class="playarea" id="playarea" aria-hidden="true"></div>
+  <div class="controls">
+    <span class="runbtns"><button class="btn" id="b-run"><span>untangle</span></button> <button class="btn" id="b-extend" hidden><span>+5 s</span></button> <button class="btn" id="b-reset" hidden><span>reset</span></button></span>
+    <span class="counter" id="counter">0 / 0</span>
+    <button class="btn live" id="b-live" disabled><span>live</span></button>
+    <button class="btn" id="b-speed" aria-label="speed"><span>1x</span></button>
+  </div>
+</footer>
+
+<div class="menu" id="m-open" role="menu"></div>
+<div class="overlay" id="o-about" role="dialog" aria-modal="true" aria-label="about"><div class="sheet" id="about"><button class="btn about-close" id="about-close"><span>close</span></button><h2>§ unknot</h2>
+  <p>Untangle knots with motion planning, building off the approach of Ladd &amp; Kavraki (2004). Draw or load a knot diagram and watch it get untangled.</p>
+  <p>Source code: <a href="https://github.com/zkingston/unknot">github.com/zkingston/unknot</a> (<code>web/</code>, MIT).</p>
+  <h3>Additional Credits</h3>
+  <p>Hard unknots: Burton et al. (2024), after the original sources listed below; DeepMind’s from Applebaum et al. (2025). Known knots: The Knot Atlas (n.d.). Drawings: <a href="https://snappy.computop.org">SnapPy</a>. Type: <a href="https://typeof.net/Iosevka/">Iosevka</a>, SIL Open Font License 1.1. Algorithms: <a href="https://github.com/zkingston/unknot/blob/main/web/CREDITS.md">CREDITS.md</a>.</p>
+  <h3>Keyboard</h3>
+  <table><tbody>
+  <tr><td>Space</td><td>play / pause (starts a run if none)</td></tr>
+  <tr><td>← →</td><td>step one record; with Shift, 10% of the run</td></tr>
+  <tr><td>V</td><td>flip 2D / 3D</td></tr><tr><td>D / O</td><td>draw / open</td></tr>
+  <tr><td>B</td><td>best view</td></tr><tr><td>S</td><td>curve / ball and stick</td></tr><tr><td>R</td><td>reset the run</td></tr><tr><td>Esc</td><td>close panel, leave draw mode</td></tr>
+  <tr><td>3D</td><td>drag rotates, wheel zooms, Shift-drag pans, arrows rotate 5°, double-click best view</td></tr>
+  </tbody></table>
+  <h3>References</h3>
+  <p class="ref">Applebaum, T., Blackwell, S., Davies, A., Edlich, T., Juhász, A., Lackenby, M., Tomašev, N., &amp; Zheng, D. (2025). The unknotting number, hard unknot diagrams, and reinforcement learning. <i>Experimental Mathematics</i>. Advance online publication. Data: <a href="https://storage.googleapis.com/gdm-unknotting/very_hard_unknots.csv" target="_blank" rel="noopener">very hard unknots</a> (CC BY 4.0). <a href="https://doi.org/10.1080/10586458.2025.2542174" target="_blank" rel="noopener">doi.org/10.1080/10586458.2025.2542174</a></p>
+  <p class="ref">Burton, B. A., Chang, H.-C., Löffler, M., Maria, C., de Mesmay, A., Schleimer, S., Sedgwick, E., &amp; Spreer, J. (2024). Hard diagrams of the unknot. <i>Experimental Mathematics, 33</i>(3), 482–500. <a href="https://doi.org/10.1080/10586458.2022.2161676" target="_blank" rel="noopener">doi.org/10.1080/10586458.2022.2161676</a></p>
+  <p class="ref">Curtis, F. (2001). <i>Unknot equivalence</i>. <a href="http://f2.org/maths/kt/unknoteq.html" target="_blank" rel="noopener">f2.org/maths/kt/unknoteq.html</a></p>
+  <p class="ref">Freedman, M. H., He, Z.-X., &amp; Wang, Z. (1994). Möbius energy of knots and unknots. <i>Annals of Mathematics, 139</i>(1), 1–50. <a href="https://doi.org/10.2307/2946626" target="_blank" rel="noopener">doi.org/10.2307/2946626</a></p>
+  <p class="ref">Goeritz, L. (1934). Bemerkungen zur Knotentheorie. <i>Abhandlungen aus dem Mathematischen Seminar der Universität Hamburg, 10</i>(1), 201–210. <a href="https://doi.org/10.1007/BF02940674" target="_blank" rel="noopener">doi.org/10.1007/BF02940674</a></p>
+  <p class="ref">Henrich, A., &amp; Kauffman, L. H. (2014). Unknotting unknots. <i>The American Mathematical Monthly, 121</i>(5), 379–390. <a href="https://doi.org/10.4169/amer.math.monthly.121.05.379" target="_blank" rel="noopener">doi.org/10.4169/amer.math.monthly.121.05.379</a></p>
+  <p class="ref">Kauffman, L. H., &amp; Lambropoulou, S. (2011). Hard unknots and collapsing tangles. In L. H. Kauffman, S. Lambropoulou, S. Jablan, &amp; J. H. Przytycki (Eds.), <i>Introductory lectures on knot theory</i> (pp. 187–247). World Scientific. <a href="https://doi.org/10.1142/9789814313001_0009" target="_blank" rel="noopener">doi.org/10.1142/9789814313001_0009</a></p>
+  <p class="ref">Ladd, A. M., &amp; Kavraki, L. E. (2004). Using motion planning for knot untangling. <i>The International Journal of Robotics Research, 23</i>(7–8), 797–808. <a href="https://doi.org/10.1177/0278364904045469" target="_blank" rel="noopener">doi.org/10.1177/0278364904045469</a></p>
+  <p class="ref">Ochiai, M. (1990). Non-trivial projections of the trivial knot. <i>Astérisque, 192</i>, 7–10. <a href="https://www.numdam.org/item/AST_1990__192__7_0/" target="_blank" rel="noopener">www.numdam.org/item/AST_1990__192__7_0/</a></p>
+  <p class="ref">Petronio, C., &amp; Zanellati, A. (2016). Algorithmic simplification of knot diagrams: New moves and experiments. <i>Journal of Knot Theory and Its Ramifications, 25</i>(10), Article 1650059. <a href="https://doi.org/10.1142/S0218216516500590" target="_blank" rel="noopener">doi.org/10.1142/S0218216516500590</a></p>
+  <p class="ref">The Knot Atlas. (n.d.). <a href="http://katlas.org" target="_blank" rel="noopener">katlas.org</a></p>
+  <p class="ref">Tuzun, R. E., &amp; Sikora, A. S. (2018). Verification of the Jones unknot conjecture up to 22 crossings. <i>Journal of Knot Theory and Its Ramifications, 27</i>(3), Article 1840009. <a href="https://doi.org/10.1142/S0218216518400096" target="_blank" rel="noopener">doi.org/10.1142/S0218216518400096</a></p>
+</div></div>
+<div class="overlay" id="o-text" role="dialog" aria-modal="true" aria-label="enter code"><div class="sheet" id="textsheet"></div></div>
+<div class="overlay" id="o-import" role="dialog" aria-modal="true" aria-label="import"><div class="sheet" id="importsheet"></div></div>
+<div class="drop" id="drop">drop a knot: image, svg, json or text</div>
+<input type="file" id="file" hidden accept=".png,.jpg,.jpeg,.gif,.webp,.bmp,.svg,.json,.txt">
+<script type="module" src="./src/main.ts"></script>
+</body>
+</html>
