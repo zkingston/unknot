@@ -25,7 +25,7 @@ jobs:
           cache-dependency-path: web/package-lock.json
       - run: npm ci
       - run: npm run build
-      - run: npm test
+      - run: npm test -- --exclude test/unit/budgets.test.ts   # wall-clock budgets: run locally
       - uses: actions/upload-pages-artifact@v3
         with:
           path: web/dist
